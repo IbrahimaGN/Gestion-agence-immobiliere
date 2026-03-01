@@ -1,0 +1,97 @@
+generator client {
+ provider = "prisma-client-js"
+}
+
+datasource db {
+ provider = "postgresql"
+ url      = env("DATABASE_URL")
+}
+
+enum TypeBien {
+  MAISON
+  APPARTEMENT
+  STUDIO
+  TERRAIN
+  VILLA
+  BUREAU
+  COMMERCE
+}
+
+enum StatutBien {
+  DISPONIBLE
+  RESERVE
+  LOUE
+  VENDU
+  ARCHIVE
+}
+
+enum StatutVisite {
+  DEMANDEE
+  CONFIRMEE
+  ANNULEE
+  EFFECTUEE
+}
+
+model Agence {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  nom       String
+  adresse   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clients Client[]
+  biens   Bien[]
+
+  @@map("agences")
+}
+
+model Client {
+  id        Int    @id @default(autoincrement())
+  prenom    String
+  nom       String
+  email     String   @unique
+  telephone String   @unique
+  agenceId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agence  Agence   @relation(fields: [agenceId], references: [id])
+  visites Visite[]
+
+  @@map("clients")
+}
+
+model Bien {
+  id        Int      @id @default(autoincrement())
+  titre     String
+  type      TypeBien
+  adresse   String
+  prix      Float
+  statut    StatutBien @default(DISPONIBLE)
+  agenceId  Int
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  agence  Agence   @relation(fields: [agenceId], references: [id])
+  visites Visite[]
+
+  @@map("biens")
+}
+
+model Visite {
+  id          Int       @id @default(autoincrement())
+  clientId    Int
+  bienId      Int
+  dateVisite  DateTime
+  statut      StatutVisite @default(DEMANDEE)
+  commentaire String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  client Client @relation(fields: [clientId], references: [id])
+  bien   Bien   @relation(fields: [bienId], references: [id])
+
+  @@unique([clientId, bienId, dateVisite])
+  @@map("visites")
+}
