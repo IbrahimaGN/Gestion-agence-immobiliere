@@ -5,9 +5,7 @@ const { convertirId } = require('../utils/id.utils');
 // Créer le repository de base pour 'agence'
 const agenceBase = baseRepo('agence');
 
-/**
- * Récupère toutes les agences avec le compteur
- */
+//méthode pour récupérer toutes les agences avec le nombre de clients et biens associés
 async function trouverToutesAgences() {
   return prisma.agence.findMany({
     orderBy: { nom: 'asc' },
@@ -17,9 +15,7 @@ async function trouverToutesAgences() {
   });
 }
 
-/**
- * Récupère une agence par son ID avec toutes ses relations
- */
+// méthode pour récupérer une agence par son ID avec les clients et biens associés
 async function trouverAgenceParId(id) {
   return agenceBase.trouverParId(id, {
     include: {
@@ -36,18 +32,14 @@ async function trouverAgenceParId(id) {
   });
 }
 
-/**
- * Récupère une agence par son code
- */
+// méthode pour récupérer une agence par son code
 async function trouverAgenceParCode(code) {
   return prisma.agence.findUnique({ 
     where: { code } 
   });
 }
 
-/**
- * Vérifie si une agence a des relations (clients ou biens)
- */
+// méthode pour vérifier si une agence a des relations (clients ou biens)
 async function agenceADesRelations(id) {
   const agenceId = convertirId(id, "ID de l'agence");
   
@@ -63,9 +55,7 @@ async function agenceADesRelations(id) {
   };
 }
 
-/**
- * Compte le nombre de clients et biens d'une agence
- */
+// méthode pour compter le nombre de clients et biens associés à une agence
 async function compterClientsEtBiens(id) {
   const agenceId = convertirId(id, "ID de l'agence");
   
@@ -77,7 +67,7 @@ async function compterClientsEtBiens(id) {
   return { clients, biens };
 }
 
-// Fusionner avec les fonctions de base
+
 module.exports = {
   ...agenceBase,
   trouverToutesAgences,

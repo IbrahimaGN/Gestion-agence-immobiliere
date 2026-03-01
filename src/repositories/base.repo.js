@@ -2,16 +2,12 @@
 const prisma = require('../config/db');
 const { convertirId, traiterIdsWhere } = require('../utils/id.utils');
 
-/**
- * Fonctions génériques pour les opérations CRUD
- */
+// methode générique pour créer un repository de base pour n'importe quel modèle Prisma
 const baseRepo = (modele) => {
   const db = prisma[modele];
 
   return {
-    /**
-     * Trouver tous les enregistrements
-     */
+    // Trouver tous les enregistrements avec des options de filtrage, tri, pagination, etc.
     async trouverTout(options = {}) {
       if (options.where) {
         options.where = traiterIdsWhere(options.where);
@@ -19,9 +15,7 @@ const baseRepo = (modele) => {
       return db.findMany(options);
     },
 
-    /**
-     * Trouver par ID
-     */
+   // Trouver un enregistrement par son ID avec des options d'inclusion
     async trouverParId(id, options = {}) {
       const idNumber = convertirId(id, modele);
       return db.findUnique({
@@ -30,9 +24,7 @@ const baseRepo = (modele) => {
       });
     },
 
-    /**
-     * Trouver un enregistrement avec conditions
-     */
+   // Trouver un enregistrement par des critères uniques (ex: email, code) avec des options d'inclusion
     async trouverUn(where, options = {}) {
       const whereTraite = traiterIdsWhere(where);
       return db.findFirst({
@@ -41,16 +33,12 @@ const baseRepo = (modele) => {
       });
     },
 
-    /**
-     * Créer un enregistrement
-     */
+    // Créer un nouvel enregistrement
     async creer(donnees) {
       return db.create({ data: donnees });
     },
 
-    /**
-     * Mettre à jour un enregistrement
-     */
+    // Mettre à jour un enregistrement par son ID
     async mettreAJour(id, donnees) {
       const idNumber = convertirId(id, modele);
       return db.update({
@@ -59,17 +47,13 @@ const baseRepo = (modele) => {
       });
     },
 
-    /**
-     * Supprimer un enregistrement
-     */
+    // Supprimer un enregistrement par son ID
     async supprimer(id) {
       const idNumber = convertirId(id, modele);
       return db.delete({ where: { id: idNumber } });
     },
 
-    /**
-     * Compter les enregistrements
-     */
+    // Compter le nombre d'enregistrements correspondant à des critères de filtrage
     async compter(where = {}) {
       const whereTraite = traiterIdsWhere(where);
       return db.count({ where: whereTraite });

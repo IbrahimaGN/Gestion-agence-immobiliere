@@ -1,9 +1,7 @@
 const asyncHandler = require('./asyncHandler');
 const { repondreSucces, repondreCreation } = require('./response');
 
-/**
- * Génère les méthodes CRUD de base pour un contrôleur
- */
+// Génère un contrôleur CRUD générique pour un service donné
 const creerControleurCrud = (service, nom) => ({
   creerTout: asyncHandler(async (req, res) => {
     const items = await service.recupererTout(req.query);

@@ -1,6 +1,4 @@
-// ============================================================
-// MIDDLEWARE D'UPLOAD DE FICHIERS (Multer - mémoire tampon)
-// ============================================================
+
 const multer = require('multer');
 const HttpError = require('../utils/httpError');
 

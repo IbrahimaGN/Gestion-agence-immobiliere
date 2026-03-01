@@ -1,13 +1,8 @@
-// utils/uploadImage.js
+
 const cloudinary = require('../config/cloudinary');
 const { HttpError } = require('./httpError');
 
-/**
- * Téléverse un fichier image vers Cloudinary
- * @param {Object} fichier - Fichier multer (req.file)
- * @param {string} dossier - Dossier Cloudinary de destination
- * @returns {Object} Résultat Cloudinary (url, public_id, etc.)
- */
+// méthode pour uploader une image sur Cloudinary
 const uploadImage = async (fichier, dossier = 'tech221-immo/biens') => {
   if (!fichier) {
     throw new HttpError(400, 'Aucun fichier fourni');
@@ -25,10 +20,7 @@ const uploadImage = async (fichier, dossier = 'tech221-immo/biens') => {
   });
 };
 
-/**
- * Supprime une image de Cloudinary
- * @param {string} publicId - Identifiant public Cloudinary
- */
+// méthode pour supprimer une image de Cloudinary
 const supprimerImage = async (publicId) => {
   if (!publicId) return;
   await cloudinary.uploader.destroy(publicId);

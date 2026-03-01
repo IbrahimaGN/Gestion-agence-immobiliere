@@ -1,6 +1,4 @@
-// ============================================================
-// POINT D'ENTRÉE PRINCIPAL — TECH 221 IMMO API
-// ============================================================
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -24,39 +22,39 @@ const visiteRoutes = require('./routes/visite.routes');
 // Initialisation de l'application Express
 const app = express();
 
-// ── Middlewares globaux ──────────────────────────────────────
+//  Middlewares globaux 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 if (env.NODE_ENV === 'development') app.use(morgan('dev'));
 
-// ── Documentation Swagger ────────────────────────────────────
+//  Documentation Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customSiteTitle: 'TECH 221 Immo - API',
 }));
 
-// ── Route de santé ───────────────────────────────────────────
+//  Route de santé
 app.get('/health', (req, res) => {
   res.json({
     succes: true,
-    message: '🏠 TECH 221 Immo API — Opérationnelle',
+    message: ' TECH 221 Immo API — Opérationnelle',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     env: env.NODE_ENV,
   });
 });
 
-// ── Routes de l'API ──────────────────────────────────────────
+// Routes de l'API
 app.use('/api/agences', agenceRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/biens',   bienRoutes);
 app.use('/api/visites', visiteRoutes);
 
-// ── Gestion des erreurs (DOIT être en dernier) ───────────────
+// Gestion des erreurs (DOIT être en dernier)
 app.use(notFound);
 app.use(errorHandler);
 
-// ── Démarrage du serveur ─────────────────────────────────────
+// Démarrage du serveur
 app.listen(env.PORT, () => {
   console.log('\n╔══════════════════════════════════════════════════╗');
   console.log('║       🏠 TECH 221 — API Immobilière v1.0.0       ║');

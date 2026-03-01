@@ -5,9 +5,7 @@ const { convertirId } = require('../utils/id.utils');
 // Créer le repository de base pour 'visite'
 const visiteBase = baseRepo('visite');
 
-/**
- * Récupère toutes les visites avec filtres optionnels
- */
+// méthode pour récupérer toutes les visites avec des filtres optionnels
 async function trouverToutesVisites(filtres = {}) {
   const where = {};
   
@@ -31,9 +29,7 @@ async function trouverToutesVisites(filtres = {}) {
   });
 }
 
-/**
- * Récupère une visite par son ID avec toutes ses relations
- */
+// méthode pour récupérer une visite par son ID avec les détails complets
 async function trouverVisiteParId(id) {
   return visiteBase.trouverParId(id, {
     include: {
@@ -47,9 +43,7 @@ async function trouverVisiteParId(id) {
   });
 }
 
-/**
- * Vérifie s'il existe un doublon de visite
- */
+// méthode pour vérifier les doublons de visite (même client, même bien, même date)
 async function verifierDoublonVisite(clientId, bienId, dateVisite) {
   const clientIdNum = convertirId(clientId, "ID du client");
   const bienIdNum = convertirId(bienId, "ID du bien");
@@ -65,9 +59,7 @@ async function verifierDoublonVisite(clientId, bienId, dateVisite) {
   });
 }
 
-/**
- * Compte les visites d'un client
- */
+// méthode pour compter le nombre de visites associées à un client
 async function compterVisitesParClient(clientId) {
   const id = convertirId(clientId, "ID du client");
   
@@ -76,9 +68,7 @@ async function compterVisitesParClient(clientId) {
   });
 }
 
-/**
- * Compte les visites d'un bien
- */
+// méthode pour compter le nombre de visites associées à un bien
 async function compterVisitesParBien(bienId) {
   const id = convertirId(bienId, "ID du bien");
   
@@ -87,9 +77,7 @@ async function compterVisitesParBien(bienId) {
   });
 }
 
-/**
- * Récupère les visites à venir
- */
+// méthode pour récupérer les visites à venir (dateVisite >= aujourd'hui et statut DEMANDEE ou CONFIRMEE)
 async function trouverVisitesAVenir() {
   const maintenant = new Date();
   
@@ -106,9 +94,7 @@ async function trouverVisitesAVenir() {
   });
 }
 
-/**
- * Met à jour le statut d'une visite
- */
+// méthode pour mettre à jour le statut d'une visite
 async function mettreAJourStatut(id, statut) {
   const idNumber = convertirId(id, "ID de la visite");
   

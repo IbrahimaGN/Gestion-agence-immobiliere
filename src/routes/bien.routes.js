@@ -1,4 +1,4 @@
-// routes/bien.routes.js
+
 const express = require('express');
 const bienController = require('../controllers/bien.controller');
 const valider = require('../middlewares/validate');

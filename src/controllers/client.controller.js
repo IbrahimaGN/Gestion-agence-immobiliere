@@ -4,10 +4,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const { sendResponse } = require('../utils/response');
 const { HttpError } = require('../utils/httpError');
 
-/**
- * @desc    Lister tous les clients
- * @route   GET /api/clients
- */
+
+// méthode pour récupérer tous les clients avec des filtres optionnels
 const getClients = asyncHandler(async (req, res) => {
   const { agenceId, recherche } = req.query;
   
@@ -19,10 +17,7 @@ const getClients = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Clients récupérés avec succès', clients);
 });
 
-/**
- * @desc    Obtenir un client par son ID
- * @route   GET /api/clients/:id
- */
+// méthode pour récupérer un client par son ID
 const getClientById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const client = await clientService.trouverClientParId(id);
@@ -34,10 +29,7 @@ const getClientById = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Client récupéré avec succès', client);
 });
 
-/**
- * @desc    Créer un nouveau client
- * @route   POST /api/clients
- */
+// méthode pour créer un nouveau client
 const createClient = asyncHandler(async (req, res) => {
   const { prenom, nom, email, telephone, agenceId } = req.body;
   
@@ -72,10 +64,7 @@ const createClient = asyncHandler(async (req, res) => {
   sendResponse(res, 201, 'Client créé avec succès', client);
 });
 
-/**
- * @desc    Modifier un client
- * @route   PUT /api/clients/:id
- */
+// méthode pour mettre à jour un client existant
 const updateClient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { prenom, nom, email, telephone, agenceId } = req.body;
@@ -113,10 +102,7 @@ const updateClient = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Client mis à jour avec succès', client);
 });
 
-/**
- * @desc    Supprimer un client
- * @route   DELETE /api/clients/:id
- */
+// méthode pour supprimer un client
 const deleteClient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   

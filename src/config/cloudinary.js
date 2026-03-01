@@ -1,7 +1,5 @@
-// ============================================================
-// CONFIGURATION CLOUDINARY (STOCKAGE DES IMAGES)
-// ============================================================
-const cloudinary = require('cloudinary').v2;
+
+const cloudinary = require('cloudinary');
 const env = require('./env');
 
 cloudinary.config({

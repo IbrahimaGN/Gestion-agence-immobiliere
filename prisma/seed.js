@@ -2,7 +2,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('🌱 Démarrage du seeding...');
+  console.log(' Démarrage...');
 
   // Créer les agences
   const agenceDakar = await prisma.agence.upsert({
@@ -35,7 +35,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Agences créées');
+  console.log(' Agences créées');
 
   // Créer des clients
   const client1 = await prisma.client.upsert({
@@ -62,7 +62,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Clients créés');
+  console.log(' Clients créés');
 
   // Créer des biens
   const bien1 = await prisma.bien.create({
@@ -98,7 +98,7 @@ async function main() {
     },
   });
 
-  console.log('✅ Biens créés');
+  console.log(' Biens créés');
 
   // Créer une visite
   const demain = new Date();
@@ -114,13 +114,13 @@ async function main() {
     },
   });
 
-  console.log('✅ Visite créée');
-  console.log('🎉 Seeding terminé avec succès !');
+  console.log(' Visite créée');
+  console.log(' Seeding terminé avec succès !');
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erreur lors du seeding :', e);
+    console.error(' Erreur lors du seeding :', e);
     process.exit(1);
   })
   .finally(async () => {

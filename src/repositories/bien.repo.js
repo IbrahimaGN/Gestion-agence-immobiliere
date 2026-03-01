@@ -5,9 +5,7 @@ const { convertirId } = require('../utils/id.utils');
 // Créer le repository de base pour 'bien'
 const bienBase = baseRepo('bien');
 
-/**
- * Récupère tous les biens avec filtres optionnels
- */
+// méthode pour récupérer tous les biens avec des filtres optionnels
 async function trouverTousBiens(filtres = {}) {
   const where = {};
 
@@ -39,9 +37,7 @@ async function trouverTousBiens(filtres = {}) {
   });
 }
 
-/**
- * Récupère un bien par son ID avec ses visites
- */
+// méthode pour récupérer un bien par son ID avec les détails complets
 async function trouverBienParId(id) {
   return bienBase.trouverParId(id, {
     include: {
@@ -57,9 +53,7 @@ async function trouverBienParId(id) {
   });
 }
 
-/**
- * Vérifie si un bien a des visites
- */
+// méthode pour vérifier si un bien a des visites associées
 async function bienADesVisites(id) {
   const bienId = convertirId(id, "ID du bien");
   
@@ -70,9 +64,7 @@ async function bienADesVisites(id) {
   return count > 0;
 }
 
-/**
- * Vérifie si un bien existe
- */
+// méthode pour vérifier si un bien existe
 async function verifierBienExiste(id) {
   const idNumber = convertirId(id, "ID du bien");
   const bien = await prisma.bien.findUnique({ 
@@ -82,9 +74,7 @@ async function verifierBienExiste(id) {
   return !!bien;
 }
 
-/**
- * Vérifie si un bien est visitable (pas LOUE, VENDU ou ARCHIVE)
- */
+// méthode pour vérifier si un bien est visitable (pas LOUE, VENDU ou ARCHIVE)
 async function bienEstVisitable(id) {
   const idNumber = convertirId(id, "ID du bien");
   
@@ -97,9 +87,7 @@ async function bienEstVisitable(id) {
   return !['LOUE', 'VENDU', 'ARCHIVE'].includes(bien.statut);
 }
 
-/**
- * Archive un bien (change son statut)
- */
+// méthode pour archiver un bien (mettre à jour son statut à ARCHIVE)
 async function archiverBien(id) {
   const idNumber = convertirId(id, "ID du bien");
   
@@ -109,9 +97,7 @@ async function archiverBien(id) {
   });
 }
 
-/**
- * Compte le nombre de visites d'un bien
- */
+// méthode pour compter le nombre de visites associées à un bien
 async function compterVisitesBien(id) {
   const bienId = convertirId(id, "ID du bien");
   

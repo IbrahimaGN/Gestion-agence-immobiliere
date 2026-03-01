@@ -1,4 +1,4 @@
-// services/client.service.js
+
 const clientRepo = require('../repositories/client.repo');
 const agenceRepo = require('../repositories/agence.repo');
 const { HttpError } = require('../utils/httpError');

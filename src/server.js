@@ -1,11 +1,11 @@
-// server.js (à la racine)
+
 const express = require('express');
 const agenceRoutes = require('./src/routes/agence.routes');
 const clientRoutes = require('./src/routes/client.routes');
 const bienRoutes = require('./src/routes/bien.routes');
 const visiteRoutes = require('./src/routes/visite.routes');
 const notFound = require('./src/middlewares/notFound');
-const errorHandler = require('./src/middlewares/errorHandler'); // À créer si nécessaire
+const errorHandler = require('./src/middlewares/errorHandler'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000;

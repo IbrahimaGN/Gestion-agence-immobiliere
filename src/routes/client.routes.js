@@ -1,4 +1,4 @@
-// routes/client.routes.js
+
 const express = require('express');
 const clientController = require('../controllers/client.controller');
 const valider = require('../middlewares/validate');

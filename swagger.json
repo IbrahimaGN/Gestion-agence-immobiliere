@@ -10,17 +10,112 @@
     { "url": "http://localhost:3000", "description": "Serveur de développement" }
   ],
   "tags": [
-    { "name": "Agences", "description": "Gestion des agences (succursales)" },
-    { "name": "Clients", "description": "Gestion des clients" },
-    { "name": "Biens", "description": "Gestion des biens immobiliers" },
-    { "name": "Visites", "description": "Gestion des visites" }
+    { "name": "Agences",  "description": "Gestion des agences" },
+    { "name": "Clients",  "description": "Gestion des clients" },
+    { "name": "Biens",    "description": "Gestion des biens immobiliers" },
+    { "name": "Visites",  "description": "Gestion des visites" }
   ],
+  "components": {
+    "parameters": {
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": { "type": "integer", "example": 1 }
+      }
+    },
+    "schemas": {
+      "Agence": {
+        "type": "object",
+        "required": ["code", "nom", "adresse"],
+        "properties": {
+          "code":    { "type": "string",  "example": "DKR-01" },
+          "nom":     { "type": "string",  "example": "Agence Dakar Plateau" },
+          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" }
+        }
+      },
+      "UpdateAgence": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "nom":     { "type": "string",  "example": "Agence Dakar Plateau" },
+          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" }
+        }
+      },
+      "Client": {
+        "type": "object",
+        "required": ["prenom", "nom", "email", "telephone", "agenceId"],
+        "properties": {
+          "prenom":    { "type": "string",  "example": "Moussa" },
+          "nom":       { "type": "string",  "example": "Diallo" },
+          "email":     { "type": "string",  "format": "email", "example": "moussa@email.com" },
+          "telephone": { "type": "string",  "pattern": "^\\+221(77|78|76)[0-9]{7}$", "example": "+221771234567" },
+          "agenceId":  { "type": "integer", "example": 1 }
+        }
+      },
+      "UpdateClient": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "prenom":    { "type": "string",  "example": "Moussa" },
+          "nom":       { "type": "string",  "example": "Diallo" },
+          "email":     { "type": "string",  "format": "email", "example": "moussa@email.com" },
+          "telephone": { "type": "string",  "pattern": "^\\+221(77|78|76)[0-9]{7}$", "example": "+221771234567" },
+          "agenceId":  { "type": "integer", "example": 1 }
+        }
+      },
+      "Bien": {
+        "type": "object",
+        "required": ["titre", "type", "adresse", "prix", "agenceId"],
+        "properties": {
+          "titre":    { "type": "string",  "example": "Appartement F3 aux Almadies" },
+          "type":     { "type": "string",  "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] },
+          "adresse":  { "type": "string",  "example": "Almadies, Dakar" },
+          "prix":     { "type": "number",  "example": 250000 },
+          "statut":   { "type": "string",  "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"], "default": "DISPONIBLE" },
+          "agenceId": { "type": "integer", "example": 1 }
+        }
+      },
+      "UpdateBien": {
+        "type": "object",
+        "minProperties": 1,
+        "properties": {
+          "titre":    { "type": "string",  "example": "Appartement F3 aux Almadies" },
+          "type":     { "type": "string",  "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] },
+          "adresse":  { "type": "string",  "example": "Almadies, Dakar" },
+          "prix":     { "type": "number",  "example": 250000 },
+          "statut":   { "type": "string",  "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"] },
+          "agenceId": { "type": "integer", "example": 1 }
+        }
+      },
+      "Visite": {
+        "type": "object",
+        "required": ["clientId", "bienId", "dateVisite"],
+        "properties": {
+          "clientId":    { "type": "integer", "example": 1 },
+          "bienId":      { "type": "integer", "example": 1 },
+          "dateVisite":  { "type": "string",  "format": "date-time", "example": "2026-12-25T10:00:00Z" },
+          "commentaire": { "type": "string",  "example": "Intéressé par un bail de 2 ans" }
+        }
+      },
+      "UpdateStatutVisite": {
+        "type": "object",
+        "required": ["statut"],
+        "properties": {
+          "statut":      { "type": "string", "enum": ["DEMANDEE","CONFIRMEE","ANNULEE","EFFECTUEE"] },
+          "commentaire": { "type": "string" }
+        }
+      }
+    }
+  },
   "paths": {
     "/api/agences": {
       "get": {
         "tags": ["Agences"],
         "summary": "Lister toutes les agences",
-        "responses": { "200": { "description": "Succès" } }
+        "responses": {
+          "200": { "description": "Succès" }
+        }
       },
       "post": {
         "tags": ["Agences"],
@@ -28,17 +123,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["code", "nom", "adresse"],
-                "properties": {
-                  "code": { "type": "string", "example": "DKR-01" },
-                  "nom": { "type": "string", "example": "Agence Dakar Plateau" },
-                  "adresse": { "type": "string", "example": "Avenue L.S. Senghor, Dakar" }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/Agence" } }
           }
         },
         "responses": {
@@ -52,35 +137,35 @@
       "get": {
         "tags": ["Agences"],
         "summary": "Obtenir une agence",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "put": {
         "tags": ["Agences"],
         "summary": "Modifier une agence",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "minProperties": 1,
-                "properties": {
-                  "nom": { "type": "string", "example": "Agence Dakar Plateau" },
-                  "adresse": { "type": "string", "example": "Avenue L.S. Senghor, Dakar" }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateAgence" } }
           }
         },
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "delete": {
         "tags": ["Agences"],
         "summary": "Supprimer une agence (refusé si relations)",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Supprimé" }, "409": { "description": "Relations existantes" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Supprimé" },
+          "409": { "description": "Relations existantes" }
+        }
       }
     },
     "/api/clients": {
@@ -88,10 +173,12 @@
         "tags": ["Clients"],
         "summary": "Lister les clients",
         "parameters": [
-          { "in": "query", "name": "agenceId", "schema": { "type": "string" } },
+          { "in": "query", "name": "agenceId",  "schema": { "type": "integer" } },
           { "in": "query", "name": "recherche", "schema": { "type": "string" } }
         ],
-        "responses": { "200": { "description": "Succès" } }
+        "responses": {
+          "200": { "description": "Succès" }
+        }
       },
       "post": {
         "tags": ["Clients"],
@@ -99,60 +186,49 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["prenom", "nom", "email", "telephone", "agenceId"],
-                "properties": {
-                  "prenom": { "type": "string", "example": "Moussa" },
-                  "nom": { "type": "string", "example": "Diallo" },
-                  "email": { "type": "string", "example": "moussa@email.com" },
-                  "telephone": { "type": "string", "example": "+221771234567" },
-                  "agenceId": { "type": "integer", "example": 1 }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/Client" } }
           }
         },
-        "responses": { "201": { "description": "Créé" }, "409": { "description": "Email ou téléphone déjà utilisé" }}
+        "responses": {
+          "201": { "description": "Créé" },
+          "409": { "description": "Email ou téléphone déjà utilisé" }
+        }
       }
     },
     "/api/clients/{id}": {
       "get": {
         "tags": ["Clients"],
         "summary": "Obtenir un client",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "put": {
         "tags": ["Clients"],
         "summary": "Modifier un client",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "minProperties": 1,
-                "properties": {
-                  "prenom": { "type": "string", "example": "Moussa" },
-                  "nom": { "type": "string", "example": "Diallo" },
-                  "email": { "type": "string", "example": "moussa@email.com" },
-                  "telephone": { "type": "string", "example": "+221771234567" },
-                  "agenceId": { "type": "integer", "example": 1 }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateClient" } }
           }
         },
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" }, "409": { "description": "Email déjà utilisé" } }
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" },
+          "409": { "description": "Email déjà utilisé" }
+        }
       },
       "delete": {
         "tags": ["Clients"],
         "summary": "Supprimer un client",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Supprimé" }, "409": { "description": "A des visites liées" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Supprimé" },
+          "409": { "description": "A des visites liées" }
+        }
       }
     },
     "/api/biens/catalogue": {
@@ -160,12 +236,14 @@
         "tags": ["Biens"],
         "summary": "Catalogue public (exclut les biens ARCHIVE)",
         "parameters": [
-          { "in": "query", "name": "type", "schema": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] } },
-          { "in": "query", "name": "statut", "schema": { "type": "string" } },
+          { "in": "query", "name": "type",    "schema": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] } },
+          { "in": "query", "name": "statut",  "schema": { "type": "string" } },
           { "in": "query", "name": "prixMin", "schema": { "type": "number" } },
           { "in": "query", "name": "prixMax", "schema": { "type": "number" } }
         ],
-        "responses": { "200": { "description": "Succès" } }
+        "responses": {
+          "200": { "description": "Succès" }
+        }
       }
     },
     "/api/biens": {
@@ -173,13 +251,15 @@
         "tags": ["Biens"],
         "summary": "Lister tous les biens (admin)",
         "parameters": [
-          { "in": "query", "name": "type", "schema": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] } },
-          { "in": "query", "name": "statut", "schema": { "type": "string", "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"] } },
+          { "in": "query", "name": "type",     "schema": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] } },
+          { "in": "query", "name": "statut",   "schema": { "type": "string", "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"] } },
           { "in": "query", "name": "agenceId", "schema": { "type": "integer" } },
-          { "in": "query", "name": "prixMin", "schema": { "type": "number" } },
-          { "in": "query", "name": "prixMax", "schema": { "type": "number" } }
+          { "in": "query", "name": "prixMin",  "schema": { "type": "number" } },
+          { "in": "query", "name": "prixMax",  "schema": { "type": "number" } }
         ],
-        "responses": { "200": { "description": "Succès" } }
+        "responses": {
+          "200": { "description": "Succès" }
+        }
       },
       "post": {
         "tags": ["Biens"],
@@ -187,70 +267,58 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["titre", "type", "adresse", "prix", "agenceId"],
-                "properties": {
-                  "titre": { "type": "string", "example": "Appartement F3 aux Almadies" },
-                  "type": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] },
-                  "adresse": { "type": "string", "example": "Almadies, Dakar" },
-                  "prix": { "type": "number", "example": 250000 },
-                  "statut": { "type": "string", "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"], "default": "DISPONIBLE" },
-                  "agenceId": { "type": "integer", "example": 1 }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/Bien" } }
           }
         },
-        "responses": { "201": { "description": "Créé" } }
+        "responses": {
+          "201": { "description": "Créé" }
+        }
       }
     },
     "/api/biens/{id}": {
       "get": {
         "tags": ["Biens"],
         "summary": "Obtenir un bien",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "put": {
         "tags": ["Biens"],
         "summary": "Modifier un bien",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "minProperties": 1,
-                "properties": {
-                  "titre": { "type": "string", "example": "Appartement F3 aux Almadies" },
-                  "type": { "type": "string", "enum": ["MAISON","APPARTEMENT","STUDIO","TERRAIN","VILLA","BUREAU","COMMERCE"] },
-                  "adresse": { "type": "string", "example": "Almadies, Dakar" },
-                  "prix": { "type": "number", "example": 250000 },
-                  "statut": { "type": "string", "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"] },
-                  "agenceId": { "type": "integer", "example": 1 }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateBien" } }
           }
         },
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "delete": {
         "tags": ["Biens"],
         "summary": "Supprimer un bien (refusé si visites)",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Supprimé" }, "409": { "description": "A des visites liées" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Supprimé" },
+          "409": { "description": "A des visites liées" }
+        }
       }
     },
     "/api/biens/{id}/archiver": {
       "patch": {
         "tags": ["Biens"],
         "summary": "Archiver un bien",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Archivé" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Archivé" },
+          "404": { "description": "Introuvable" }
+        }
       }
     },
     "/api/visites": {
@@ -259,10 +327,12 @@
         "summary": "Lister les visites",
         "parameters": [
           { "in": "query", "name": "clientId", "schema": { "type": "integer" } },
-          { "in": "query", "name": "bienId", "schema": { "type": "integer" } },
-          { "in": "query", "name": "statut", "schema": { "type": "string", "enum": ["DEMANDEE","CONFIRMEE","ANNULEE","EFFECTUEE"] } }
+          { "in": "query", "name": "bienId",   "schema": { "type": "integer" } },
+          { "in": "query", "name": "statut",   "schema": { "type": "string", "enum": ["DEMANDEE","CONFIRMEE","ANNULEE","EFFECTUEE"] } }
         ],
-        "responses": { "200": { "description": "Succès" } }
+        "responses": {
+          "200": { "description": "Succès" }
+        }
       },
       "post": {
         "tags": ["Visites"],
@@ -270,18 +340,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["clientId", "bienId", "dateVisite"],
-                "properties": {
-                  "clientId": { "type": "integer", "example": 1 },
-                  "bienId": { "type": "integer", "example": 1 },
-                  "dateVisite": { "type": "string", "format": "date-time", "example": "2026-12-25T10:00:00Z" },
-                  "commentaire": { "type": "string", "example": "Intéressé par un bail de 2 ans" }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/Visite" } }
           }
         },
         "responses": {
@@ -295,61 +354,69 @@
       "get": {
         "tags": ["Visites"],
         "summary": "Obtenir une visite",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Succès" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Succès" },
+          "404": { "description": "Introuvable" }
+        }
       },
       "delete": {
         "tags": ["Visites"],
         "summary": "Supprimer une visite",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Supprimée" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Supprimée" }
+        }
       }
     },
     "/api/visites/{id}/statut": {
       "patch": {
         "tags": ["Visites"],
         "summary": "Mettre à jour le statut d'une visite",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["statut"],
-                "properties": {
-                  "statut": { "type": "string", "enum": ["DEMANDEE","CONFIRMEE","ANNULEE","EFFECTUEE"] },
-                  "commentaire": { "type": "string" }
-                }
-              }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateStatutVisite" } }
           }
         },
-        "responses": { "200": { "description": "Mis à jour" }, "404": { "description": "Introuvable" } }
+        "responses": {
+          "200": { "description": "Mis à jour" },
+          "404": { "description": "Introuvable" }
+        }
       }
     },
     "/api/visites/{id}/annuler": {
       "patch": {
         "tags": ["Visites"],
         "summary": "Annuler une visite",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Annulée" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Annulée" },
+          "404": { "description": "Introuvable" }
+        }
       }
     },
     "/api/visites/{id}/confirmer": {
       "patch": {
         "tags": ["Visites"],
         "summary": "Confirmer une visite",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Confirmée" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Confirmée" },
+          "404": { "description": "Introuvable" }
+        }
       }
     },
     "/api/visites/{id}/effectuer": {
       "patch": {
         "tags": ["Visites"],
         "summary": "Marquer une visite comme effectuée",
-        "parameters": [{ "in": "path", "name": "id", "required": true, "schema": { "type": "integer" } }],
-        "responses": { "200": { "description": "Effectuée" }, "404": { "description": "Introuvable" } }
+        "parameters": [{ "$ref": "#/components/parameters/Id" }],
+        "responses": {
+          "200": { "description": "Effectuée" },
+          "404": { "description": "Introuvable" }
+        }
       }
     }
   }

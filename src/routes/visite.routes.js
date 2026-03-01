@@ -1,4 +1,4 @@
-// routes/visite.routes.js
+
 const express = require('express');
 const visiteController = require('../controllers/visite.controller');
 const valider = require('../middlewares/validate');

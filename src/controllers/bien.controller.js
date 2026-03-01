@@ -4,10 +4,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const { sendResponse } = require('../utils/response');
 const { HttpError } = require('../utils/httpError');
 
-/**
- * @desc    Catalogue public (exclut les biens ARCHIVE)
- * @route   GET /api/biens/catalogue
- */
+// méthode pour récupérer le catalogue de biens disponibles
 const getCatalogue = asyncHandler(async (req, res) => {
   const { type, statut, prixMin, prixMax } = req.query;
   
@@ -23,10 +20,8 @@ const getCatalogue = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Catalogue récupéré avec succès', biens);
 });
 
-/**
- * @desc    Lister tous les biens (admin)
- * @route   GET /api/biens
- */
+
+// méthode pour récupérer tous les biens avec des filtres optionnels
 const getBiens = asyncHandler(async (req, res) => {
   const { type, statut, agenceId, prixMin, prixMax } = req.query;
   
@@ -42,10 +37,8 @@ const getBiens = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Biens récupérés avec succès', biens);
 });
 
-/**
- * @desc    Obtenir un bien par son ID
- * @route   GET /api/biens/:id
- */
+
+// méthode pour récupérer un bien par son ID
 const getBienById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const bien = await bienService.trouverBienParId(id);
@@ -57,10 +50,8 @@ const getBienById = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Bien récupéré avec succès', bien);
 });
 
-/**
- * @desc    Créer un nouveau bien
- * @route   POST /api/biens
- */
+
+// méthode pour créer un nouveau bien
 const createBien = asyncHandler(async (req, res) => {
   const { titre, type, adresse, prix, statut, agenceId } = req.body;
   
@@ -82,10 +73,7 @@ const createBien = asyncHandler(async (req, res) => {
   sendResponse(res, 201, 'Bien créé avec succès', bien);
 });
 
-/**
- * @desc    Modifier un bien
- * @route   PUT /api/biens/:id
- */
+// méthode pour mettre à jour un bien existant
 const updateBien = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { titre, type, adresse, prix, statut, agenceId } = req.body;
@@ -116,10 +104,7 @@ const updateBien = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Bien mis à jour avec succès', bien);
 });
 
-/**
- * @desc    Supprimer un bien
- * @route   DELETE /api/biens/:id
- */
+// méthode pour supprimer un bien
 const deleteBien = asyncHandler(async (req, res) => {
   const { id } = req.params;
   
@@ -139,10 +124,7 @@ const deleteBien = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Bien supprimé avec succès');
 });
 
-/**
- * @desc    Archiver un bien
- * @route   PATCH /api/biens/:id/archiver
- */
+// méthode pour archiver un bien
 const archiveBien = asyncHandler(async (req, res) => {
   const { id } = req.params;
   
@@ -155,6 +137,7 @@ const archiveBien = asyncHandler(async (req, res) => {
   const bienArchive = await bienService.archiverBien(id);
   sendResponse(res, 200, 'Bien archivé avec succès', bienArchive);
 });
+
 
 module.exports = {
   getCatalogue,

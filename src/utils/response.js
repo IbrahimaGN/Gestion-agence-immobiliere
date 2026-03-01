@@ -1,15 +1,9 @@
-// utils/response.js
-/**
- * Formate et envoie une réponse JSON standardisée
- * @param {Object} res - L'objet response Express
- * @param {number} statusCode - Le code HTTP
- * @param {string} message - Le message de réponse
- * @param {any} data - Les données à envoyer (optionnel)
- */
+// methode pour envoyer une réponse JSON standardisée
 function sendResponse(res, statusCode, message, data = null) {
   const response = {
     success: statusCode >= 200 && statusCode < 300,
     message,
+    //toISOString() permet de formater la date au format ISO 8601, qui est un format de date standard largement utilisé pour les API
     timestamp: new Date().toISOString()
   };
 

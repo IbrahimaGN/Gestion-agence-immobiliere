@@ -3,19 +3,15 @@ const asyncHandler = require('../utils/asyncHandler');
 const { sendResponse } = require('../utils/response');
 const { HttpError } = require('../utils/httpError');
 
-/**
- * @desc    Lister toutes les agences
- * @route   GET /api/agences
- */
+
+// méthode pour récupérer toutes les agences
 const getAgences = asyncHandler(async (req, res) => {
   const agences = await agenceService.trouverToutesAgences();
   sendResponse(res, 200, 'Agences récupérées avec succès', agences);
 });
 
-/**
- * @desc    Obtenir une agence par son ID
- * @route   GET /api/agences/:id
- */
+
+// méthode pour récupérer une agence par son ID
 const getAgenceById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const agence = await agenceService.trouverAgenceParId(id);
@@ -28,14 +24,11 @@ const getAgenceById = asyncHandler(async (req, res) => {
 });
 
 
-/**
- * @desc    Créer une nouvelle agence
- * @route   POST /api/agences
- */
+// méthode pour créer une nouvelle agence
 const createAgence = asyncHandler(async (req, res) => {
   const { code, nom, adresse } = req.body;
   
-  // Vérifier si le code existe déjà
+  
   const existant = await agenceService.trouverAgenceParCode(code);
   if (existant) {
     throw new HttpError(409, `Une agence avec le code ${code} existe déjà`);
@@ -50,21 +43,17 @@ const createAgence = asyncHandler(async (req, res) => {
   sendResponse(res, 201, 'Agence créée avec succès', agence);
 });
 
-/**
- * @desc    Modifier une agence
- * @route   PUT /api/agences/:id
- */
+
+// méthode pour mettre à jour une agence existante
 const updateAgence = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { nom, adresse, code } = req.body;
   
-  // Vérifier que l'agence existe
   const agenceExistante = await agenceService.trouverAgenceParId(id);
   if (!agenceExistante) {
     throw new HttpError(404, 'Agence non trouvée');
   }
   
-  // Si le code est modifié, vérifier son unicité
   if (code && code !== agenceExistante.code) {
     const codeExistant = await agenceService.trouverAgenceParCode(code);
     if (codeExistant) {
@@ -81,10 +70,8 @@ const updateAgence = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Agence mise à jour avec succès', agence);
 });
 
-/**
- * @desc    Supprimer une agence
- * @route   DELETE /api/agences/:id
- */
+
+// méthode pour supprimer une agence
 const deleteAgence = asyncHandler(async (req, res) => {
   const { id } = req.params;
   

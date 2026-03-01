@@ -1,4 +1,4 @@
-// services/bien.service.js
+
 const bienRepo = require('../repositories/bien.repo');
 const agenceRepo = require('../repositories/agence.repo');
 const { HttpError } = require('../utils/httpError');

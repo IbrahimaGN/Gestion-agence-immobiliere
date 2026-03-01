@@ -5,9 +5,7 @@ const { convertirId } = require('../utils/id.utils');
 // Créer le repository de base pour 'client'
 const clientBase = baseRepo('client');
 
-/**
- * Récupère tous les clients avec filtres optionnels
- */
+// méthode pour récupérer tous les clients avec des filtres optionnels
 async function trouverTousClients(filtres = {}) {
   const where = {};
   
@@ -33,9 +31,7 @@ async function trouverTousClients(filtres = {}) {
   });
 }
 
-/**
- * Récupère un client par son ID avec ses visites
- */
+// méthode pour récupérer un client par son ID avec les détails complets
 async function trouverClientParId(id) {
   return clientBase.trouverParId(id, {
     include: {
@@ -50,9 +46,7 @@ async function trouverClientParId(id) {
   });
 }
 
-/**
- * Récupère un client par son email
- */
+// méthode pour récupérer un client par son email
 async function trouverClientParEmail(email) {
   return prisma.client.findUnique({ 
     where: { email } 
@@ -63,9 +57,7 @@ async function trouverClientParTelephone(telephone) {
   return prisma.client.findUnique({ where: { telephone } });
 }
 
-/**
- * Vérifie si un client a des visites
- */
+// méthode pour vérifier si un client a des visites associées
 async function clientADesVisites(id) {
   const clientId = convertirId(id, "ID du client");
   
@@ -76,9 +68,7 @@ async function clientADesVisites(id) {
   return count > 0;
 }
 
-/**
- * Compte le nombre de visites d'un client
- */
+// méthode pour compter le nombre de visites associées à un client
 async function compterVisitesClient(id) {
   const clientId = convertirId(id, "ID du client");
   
@@ -87,9 +77,7 @@ async function compterVisitesClient(id) {
   });
 }
 
-/**
- * Vérifie si un client existe
- */
+// méthode pour vérifier si un client existe
 async function verifierClientExiste(id) {
   const idNumber = convertirId(id, "ID du client");
   const client = await prisma.client.findUnique({ 

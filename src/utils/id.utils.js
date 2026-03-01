@@ -1,15 +1,9 @@
-/**
- * Convertit un ID en nombre
- * @param {any} id - L'ID à convertir
- * @param {string} nom - Nom du champ pour le message d'erreur
- * @returns {number} L'ID converti
- * @throws {Error} Si l'ID n'est pas valide
- */
+//methode pour convertir un ID en nombre entier et vérifier sa validité
 function convertirId(id, nom = 'ID') {
   if (id === undefined || id === null) {
     throw new Error(`Le ${nom} est requis`);
   }
-  
+  // typeof permet de vérifier si l'ID est déjà un nombre, auquel cas on le retourne tel quel
   if (typeof id === 'number') return id;
   
   const idNumber = parseInt(id);
@@ -20,11 +14,7 @@ function convertirId(id, nom = 'ID') {
   return idNumber;
 }
 
-/**
- * Traite récursivement tous les IDs dans un objet where
- * @param {Object} where - Les conditions where
- * @returns {Object} Les conditions avec IDs convertis
- */
+// méthode pour traiter les objets "where" et convertir tous les champs d'ID en nombres entiers
 function traiterIdsWhere(where) {
   if (!where || typeof where !== 'object') return where;
   

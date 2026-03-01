@@ -5,10 +5,8 @@ const asyncHandler = require('../utils/asyncHandler');
 const { sendResponse } = require('../utils/response');
 const { HttpError } = require('../utils/httpError');
 
-/**
- * @desc    Lister toutes les visites
- * @route   GET /api/visites
- */
+
+// méthode pour récupérer toutes les visites avec des filtres optionnels
 const getVisites = asyncHandler(async (req, res) => {
   const { clientId, bienId, statut } = req.query;
   
@@ -21,10 +19,7 @@ const getVisites = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Visites récupérées avec succès', visites);
 });
 
-/**
- * @desc    Obtenir une visite par son ID
- * @route   GET /api/visites/:id
- */
+// méthode pour récupérer une visite par son ID
 const getVisiteById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const visite = await visiteService.trouverVisiteParId(id);
@@ -36,10 +31,7 @@ const getVisiteById = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Visite récupérée avec succès', visite);
 });
 
-/**
- * @desc    Planifier une nouvelle visite
- * @route   POST /api/visites
- */
+// méthode pour créer une nouvelle visite
 const createVisite = asyncHandler(async (req, res) => {
   const { clientId, bienId, dateVisite, commentaire } = req.body;
   
@@ -81,10 +73,7 @@ const createVisite = asyncHandler(async (req, res) => {
   sendResponse(res, 201, 'Visite planifiée avec succès', visite);
 });
 
-/**
- * @desc    Mettre à jour le statut d'une visite
- * @route   PATCH /api/visites/:id/statut
- */
+// méthode pour mettre à jour le statut d'une visite
 const updateStatutVisite = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { statut, commentaire } = req.body;
@@ -103,10 +92,7 @@ const updateStatutVisite = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Statut de la visite mis à jour avec succès', visite);
 });
 
-/**
- * @desc    Annuler une visite
- * @route   PATCH /api/visites/:id/annuler
- */
+// méthode pour annuler une visite
 const annulerVisite = asyncHandler(async (req, res) => {
   const { id } = req.params;
   
@@ -114,10 +100,7 @@ const annulerVisite = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Visite annulée avec succès', visite);
 });
 
-/**
- * @desc    Confirmer une visite
- * @route   PATCH /api/visites/:id/confirmer
- */
+// méthode pour confirmer une visite
 const confirmerVisite = asyncHandler(async (req, res) => {
   const { id } = req.params;
   
@@ -125,10 +108,7 @@ const confirmerVisite = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Visite confirmée avec succès', visite);
 });
 
-/**
- * @desc    Marquer une visite comme effectuée
- * @route   PATCH /api/visites/:id/effectuer
- */
+// méthode pour marquer une visite comme effectuée
 const effectuerVisite = asyncHandler(async (req, res) => {
   const { id } = req.params;
   
@@ -136,10 +116,8 @@ const effectuerVisite = asyncHandler(async (req, res) => {
   sendResponse(res, 200, 'Visite marquée comme effectuée avec succès', visite);
 });
 
-/**
- * @desc    Supprimer une visite
- * @route   DELETE /api/visites/:id
- */
+
+// méthode pour supprimer une visite
 const deleteVisite = asyncHandler(async (req, res) => {
   const { id } = req.params;
   

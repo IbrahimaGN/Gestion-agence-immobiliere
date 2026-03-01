@@ -1,4 +1,4 @@
-// services/visite.service.js
+
 const visiteRepo = require('../repositories/visite.repo');
 const clientRepo = require('../repositories/client.repo');
 const bienRepo = require('../repositories/bien.repo');

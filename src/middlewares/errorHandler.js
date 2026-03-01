@@ -1,7 +1,7 @@
-// middlewares/errorHandler.js
+//permet de gérer les erreurs de manière centralisée dans l'application Express
 const { HttpError } = require('../utils/httpError');
 
-// eslint-disable-next-line no-unused-vars
+// Middleware de gestion des erreurs
 const errorHandler = (err, req, res, next) => {
   console.error(`[ERREUR] ${err.name}: ${err.message}`);
 
