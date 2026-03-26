@@ -7,11 +7,11 @@ const stockage = multer.memoryStorage();
 
 // Filtre : accepter uniquement les images
 const filtrerFichier = (req, fichier, cb) => {
-  const typesAcceptes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  const typesAcceptes = ['image/jpeg', 'image/png'];
   if (typesAcceptes.includes(fichier.mimetype)) {
     cb(null, true);
   } else {
-    cb(HttpError.badRequest('Format de fichier non supporté. Utilisez : JPEG, PNG ou WebP'), false);
+    cb(HttpError.badRequest('Format de fichier non supporté. Utilisez : JPEG ou PNG'), false);
   }
 };
 
@@ -20,12 +20,13 @@ const upload = multer({
   storage: stockage,
   fileFilter: filtrerFichier,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5 Mo maximum
+    fileSize: 2 * 1024 * 1024, // 2 Mo maximum
   },
 });
 
 // Middlewares préconfigurés
-const uploadUneFoto = upload.single('image');
+const uploadImage = upload.single('imageUrl');
 const uploadPlusieursPhotos = upload.array('images', 5); // Max 5 images
 
-module.exports = { uploadUneFoto, uploadPlusieursPhotos };
+
+module.exports = { uploadImage, uploadPlusieursPhotos };

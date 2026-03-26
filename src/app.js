@@ -33,7 +33,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
   customSiteTitle: 'TECH 221 Immo - API',
 }));
 
-//  Route de santé
+
 app.get('/health', (req, res) => {
   res.json({
     succes: true,
@@ -50,7 +50,7 @@ app.use('/api/clients', clientRoutes);
 app.use('/api/biens',   bienRoutes);
 app.use('/api/visites', visiteRoutes);
 
-// Gestion des erreurs (DOIT être en dernier)
+// Gestion des erreurs 
 app.use(notFound);
 app.use(errorHandler);
 

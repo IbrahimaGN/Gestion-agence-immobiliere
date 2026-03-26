@@ -48,11 +48,13 @@ model Agence {
 
 model Client {
   id        Int    @id @default(autoincrement())
+  matricule String? @unique
   prenom    String
   nom       String
   email     String   @unique
   telephone String   @unique
   agenceId  Int
+  imageUrl String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -75,7 +77,7 @@ model Bien {
 
   agence  Agence   @relation(fields: [agenceId], references: [id])
   visites Visite[]
-
+  
   @@map("biens")
 }
 

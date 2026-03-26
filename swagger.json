@@ -50,7 +50,8 @@
           "nom":       { "type": "string",  "example": "Diallo" },
           "email":     { "type": "string",  "format": "email", "example": "moussa@email.com" },
           "telephone": { "type": "string",  "pattern": "^\\+221(77|78|76)[0-9]{7}$", "example": "+221771234567" },
-          "agenceId":  { "type": "integer", "example": 1 }
+          "agenceId":  { "type": "integer", "example": 1 },
+          "imageUrl":  { "type": "file",    "format": "uri", "example": "moussa.jpg" }
         }
       },
       "UpdateClient": {
@@ -61,7 +62,8 @@
           "nom":       { "type": "string",  "example": "Diallo" },
           "email":     { "type": "string",  "format": "email", "example": "moussa@email.com" },
           "telephone": { "type": "string",  "pattern": "^\\+221(77|78|76)[0-9]{7}$", "example": "+221771234567" },
-          "agenceId":  { "type": "integer", "example": 1 }
+          "agenceId":  { "type": "integer", "example": 1 },
+          "imageUrl":  { "type": "file",    "format": "uri", "example": "moussa.jpg" }
         }
       },
       "Bien": {
@@ -75,7 +77,7 @@
           "statut":   { "type": "string",  "enum": ["DISPONIBLE","RESERVE","LOUE","VENDU","ARCHIVE"], "default": "DISPONIBLE" },
           "agenceId": { "type": "integer", "example": 1 }
         }
-      },
+      },  
       "UpdateBien": {
         "type": "object",
         "minProperties": 1,
@@ -186,7 +188,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/Client" } }
+            "multipart/form-data": { "schema": { "$ref": "#/components/schemas/Client" } }
           }
         },
         "responses": {
@@ -212,7 +214,7 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": { "schema": { "$ref": "#/components/schemas/UpdateClient" } }
+            "multipart/form-data": { "schema": { "$ref": "#/components/schemas/UpdateClient" } }
           }
         },
         "responses": {
@@ -420,4 +422,5 @@
       }
     }
   }
+  
 }

@@ -1,4 +1,3 @@
-
 const clientRepo = require('../repositories/client.repo');
 const agenceRepo = require('../repositories/agence.repo');
 const { HttpError } = require('../utils/httpError');
@@ -36,7 +35,12 @@ async function creerClient(donnees) {
   if (!agence) {
     throw new HttpError(400, `L'agence avec l'ID ${donnees.agenceId} n'existe pas`);
   }
-  return clientRepo.creer(donnees);
+  const matricule = await genererMatricule();
+  
+  return clientRepo.creer({
+    ...donnees,
+    matricule
+  });
 }
 
 async function mettreAJourClient(id, donnees) {
@@ -54,6 +58,26 @@ async function mettreAJourClient(id, donnees) {
     }
   }
   return clientRepo.mettreAJour(id, donnees);
+}
+
+async function genererMatricule() {
+  const annee = new Date().getFullYear();
+  const prefix = `CLT-${annee}`;
+  
+  // Récupérer le dernier matricule créé pour l'année en cours
+  const dernierClient = await clientRepo.trouverDernierClientParAnnee(annee);
+  
+  let numero = 1;
+  if (dernierClient && dernierClient.matricule) {
+    const parties = dernierClient.matricule.split('-');
+    if (parties.length === 3) {
+      numero = parseInt(parties[2]) + 1;
+    }
+  }
+  
+  const numeroFormate = numero.toString().padStart(4, '0');
+  
+  return `${prefix}-${numeroFormate}`;
 }
 
 async function supprimerClient(id) {
@@ -78,4 +102,5 @@ module.exports = {
   mettreAJourClient,
   supprimerClient,
   clientADesVisites,
+  genererMatricule
 };

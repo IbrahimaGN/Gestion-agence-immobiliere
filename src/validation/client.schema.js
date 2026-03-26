@@ -23,6 +23,12 @@ const schemaCreerClient = Joi.object({
     'number.base': 'L\'identifiant de l\'agence doit être un nombre',
     'number.integer': 'L\'identifiant de l\'agence doit être un nombre entier',
   }),
+  imageUrl: Joi.string().uri().optional().messages({
+    'string.uri': 'L\'URL de l\'image doit être valide',
+    'string.size': 'la taille de l\'image doit être inférieure à 2 Mo',
+    'string.format': 'L\'URL de l\'image doit être au format valide(jpeg, png)',
+  }),
+
 });
 
 const schemaMettreAJourClient = Joi.object({
@@ -33,6 +39,11 @@ const schemaMettreAJourClient = Joi.object({
   agenceId: Joi.number().integer().messages({
     'number.base': 'L\'identifiant de l\'agence doit être un nombre',
     'number.integer': 'L\'identifiant de l\'agence doit être un nombre entier',
+  }),
+  imageUrl: Joi.string().uri().optional().messages({
+    'string.uri': 'L\'URL de l\'image doit être valide',
+    'string.size': 'la taille de l\'image doit être inférieure à 2 Mo',
+    'string.format': 'L\'URL de l\'image doit être au format valide(jpeg, png)',
   }),
 }).min(1);
 

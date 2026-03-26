@@ -46,6 +46,23 @@ async function trouverClientParId(id) {
   });
 }
 
+async function trouverDernierClientParAnnee(annee) {
+  const clients = await prisma.client.findMany({
+    where: {
+      matricule: {
+        startsWith: `CLT-${annee}`
+      }
+    },
+    orderBy: {
+      matricule: 'desc'
+    },
+    take: 1
+  });
+  
+  return clients.length > 0 ? clients[0] : null;
+}
+
+
 // méthode pour récupérer un client par son email
 async function trouverClientParEmail(email) {
   return prisma.client.findUnique({ 
@@ -55,6 +72,10 @@ async function trouverClientParEmail(email) {
 
 async function trouverClientParTelephone(telephone) {
   return prisma.client.findUnique({ where: { telephone } });
+}
+
+async function trouverClientParMatricule(matricule) {
+  return prisma.client.findUnique({ where: { matricule } });
 }
 
 // méthode pour vérifier si un client a des visites associées
@@ -95,5 +116,7 @@ module.exports = {
   trouverClientParTelephone,
   clientADesVisites,
   compterVisitesClient,
-  verifierClientExiste
+  verifierClientExiste,
+  trouverClientParMatricule,
+  trouverDernierClientParAnnee
 };

@@ -6,6 +6,8 @@ const errorHandler = (err, req, res, next) => {
   console.error(`[ERREUR] ${err.name}: ${err.message}`);
 
   // Erreur Prisma - violation de contrainte unique
+  // .meta? permet d'accéder à des informations supplémentaires sur l'erreur, comme les champs concernés
+  // .target? contient les champs qui ont causé la violation de contrainte unique, et .join(', ') les formate en une chaîne lisible
   if (err.code === 'P2002') {
     const champ = err.meta?.target?.join(', ') || 'champ';
     return res.status(409).json({

@@ -3,6 +3,7 @@ const agenceService = require('../services/agence.service');
 const asyncHandler = require('../utils/asyncHandler');
 const { sendResponse } = require('../utils/response');
 const { HttpError } = require('../utils/httpError');
+const { uploadImage, supprimerImage, extrairePublicId } = require('../utils/uploadImage');
 
 
 // méthode pour récupérer tous les clients avec des filtres optionnels
@@ -52,13 +53,22 @@ const createClient = asyncHandler(async (req, res) => {
   if (!agence) {
     throw new HttpError(400, `L'agence avec l'ID ${agenceId} n'existe pas`);
   }
+
+  let imageUrl = null;
+  if (req.file) {
+    const result = await uploadImage(req.file.buffer, req.file, 'tech221-immo/clients');
+    imageUrl = result.secure_url;
+  }
   
+  const matricule = await clientService.genererMatricule();
   const client = await clientService.creerClient({
     prenom,
     nom,
     email,
     telephone,
-    agenceId: parseInt(agenceId)
+    agenceId: parseInt(agenceId),
+    imageUrl,
+    matricule
   });
   
   sendResponse(res, 201, 'Client créé avec succès', client);
@@ -69,7 +79,7 @@ const updateClient = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { prenom, nom, email, telephone, agenceId } = req.body;
   
-  // Vérifier que le client existe
+  // Vérifier que le client existe et récupérer ses données
   const clientExist = await clientService.trouverClientParId(id);
   if (!clientExist) {
     throw new HttpError(404, 'Client non trouvé');
@@ -90,13 +100,35 @@ const updateClient = asyncHandler(async (req, res) => {
       throw new HttpError(400, `L'agence avec l'ID ${agenceId} n'existe pas`);
     }
   }
+
+  let imageUrl = undefined; // conserver l'ancienne image si aucune nouvelle n'est fournie
+  
+  // Si une nouvelle image est uploadée
+  if (req.file) {
+    const result = await uploadImage(req.file.buffer, req.file, 'tech221-immo/clients');
+    imageUrl = result.secure_url;
+    
+    // Supprimer l'ancienne image si elle existe
+    if (clientExist.imageUrl) {
+      try {
+        const publicId = extrairePublicId(clientExist.imageUrl);
+        if (publicId) {
+          await supprimerImage(publicId);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'ancienne image:', error);
+        // Ne pas bloquer la mise à jour si la suppression échoue
+      }
+    }
+  }
   
   const client = await clientService.mettreAJourClient(id, {
     prenom,
     nom,
     email,
     telephone,
-    agenceId: agenceId ? parseInt(agenceId) : undefined
+    agenceId: agenceId ? parseInt(agenceId) : undefined, 
+    imageUrl
   });
   
   sendResponse(res, 200, 'Client mis à jour avec succès', client);
@@ -117,6 +149,20 @@ const deleteClient = asyncHandler(async (req, res) => {
   if (aDesVisites) {
     throw new HttpError(409, 'Impossible de supprimer : le client a des visites planifiées');
   }
+
+  // Supprimer l'image Cloudinary si elle existe
+  if (client.imageUrl) {
+    try {
+      const publicId = extrairePublicId(client.imageUrl);
+      if (publicId) {
+        await supprimerImage(publicId);
+        console.log(`Image Cloudinary supprimée avec succès: ${publicId}`);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'image Cloudinary:', error);
+      // Ne pas bloquer la suppression du client si l'image ne peut pas être supprimée
+    }
+  }
   
   await clientService.supprimerClient(id);
   sendResponse(res, 200, 'Client supprimé avec succès');
@@ -127,5 +173,6 @@ module.exports = {
   getClientById,
   createClient,
   updateClient,
-  deleteClient
+  deleteClient,
+  uploadImage
 };
