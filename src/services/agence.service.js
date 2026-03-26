@@ -15,25 +15,43 @@ async function trouverAgenceParId(id) {
 }
 
 async function trouverAgenceParCode(code) {
-  return agenceRepo.trouverAgenceParCode(code);
+  return agenceRepo.trouverAgenceParCodeEtSousAgence(code, null);
 }
 
 async function creerAgence(donnees) {
-  const existant = await agenceRepo.trouverAgenceParCode(donnees.code);
+  const { code, sousAgence = null } = donnees;
+  
+  // Vérifier l'unicité du couple (code, sousAgence)
+  const existant = await agenceRepo.trouverAgenceParCodeEtSousAgence(code, sousAgence);
   if (existant) {
-    throw new HttpError(409, `Une agence avec le code ${donnees.code} existe déjà`);
+    if (sousAgence) {
+      throw new HttpError(409, `Une agence avec le code ${code} et la sous-agence ${sousAgence} existe déjà`);
+    } else {
+      throw new HttpError(409, `Une agence avec le code ${code} existe déjà`);
+    }
   }
+  
   return agenceRepo.creer(donnees);
 }
 
 async function mettreAJourAgence(id, donnees) {
-  await trouverAgenceParId(id);
-  if (donnees.code) {
-    const existant = await agenceRepo.trouverAgenceParCode(donnees.code);
+  const agenceExistante = await trouverAgenceParId(id);
+  
+  if (donnees.code || donnees.sousAgence !== undefined) {
+    const nouveauCode = donnees.code || agenceExistante.code;
+    const nouvelleSousAgence = donnees.sousAgence !== undefined ? donnees.sousAgence : agenceExistante.sousAgence;
+    
+    // Vérifier l'unicité du nouveau couple (code, sousAgence)
+    const existant = await agenceRepo.trouverAgenceParCodeEtSousAgence(nouveauCode, nouvelleSousAgence);
     if (existant && existant.id !== parseInt(id)) {
-      throw new HttpError(409, `Une agence avec le code ${donnees.code} existe déjà`);
+      if (nouvelleSousAgence) {
+        throw new HttpError(409, `Une agence avec le code ${nouveauCode} et la sous-agence ${nouvelleSousAgence} existe déjà`);
+      } else {
+        throw new HttpError(409, `Une agence avec le code ${nouveauCode} existe déjà`);
+      }
     }
   }
+  
   return agenceRepo.mettreAJour(id, donnees);
 }
 

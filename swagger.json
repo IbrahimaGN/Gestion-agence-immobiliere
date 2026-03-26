@@ -31,7 +31,8 @@
         "properties": {
           "code":    { "type": "string",  "example": "DKR-01" },
           "nom":     { "type": "string",  "example": "Agence Dakar Plateau" },
-          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" }
+          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" },
+          "sousAgence": { "type": "string", "example": "Dakar Médina" }
         }
       },
       "UpdateAgence": {
@@ -39,7 +40,8 @@
         "minProperties": 1,
         "properties": {
           "nom":     { "type": "string",  "example": "Agence Dakar Plateau" },
-          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" }
+          "adresse": { "type": "string",  "example": "Avenue L.S. Senghor, Dakar" },
+          "sousAgence": { "type": "string", "example": "Dakar Médina" }
         }
       },
       "Client": {

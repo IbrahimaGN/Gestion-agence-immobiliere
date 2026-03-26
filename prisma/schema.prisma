@@ -37,12 +37,14 @@ model Agence {
   code      String   @unique
   nom       String
   adresse   String
+  sousAgence String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   clients Client[]
   biens   Bien[]
 
+  @@unique([code, sousAgence])
   @@map("agences")
 }
 

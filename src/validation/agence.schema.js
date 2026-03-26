@@ -19,11 +19,16 @@ const schemaCreerAgence = Joi.object({
     'any.required': 'L\'adresse est obligatoire',
     'string.empty': 'L\'adresse ne peut pas être vide',
   }),
+   sousAgence: Joi.string().optional().allow(null, '').messages({
+    'string.base': 'La sous-agence doit être une chaîne de caractères',
+  }),
 });
 
 const schemaMettreAJourAgence = Joi.object({
+  code: Joi.string().optional(),
   nom: Joi.string().min(2).max(100),
   adresse: Joi.string().min(5).max(255),
+  sousAgence: Joi.string().optional().allow(null, ''),
 }).min(1).messages({
   'object.min': 'Au moins un champ est requis pour la mise à jour',
 });

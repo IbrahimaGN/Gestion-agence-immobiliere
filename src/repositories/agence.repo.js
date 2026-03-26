@@ -5,7 +5,7 @@ const { convertirId } = require('../utils/id.utils');
 // Créer le repository de base pour 'agence'
 const agenceBase = baseRepo('agence');
 
-//méthode pour récupérer toutes les agences avec le nombre de clients et biens associés
+// méthode pour récupérer toutes les agences avec le nombre de clients et biens associés
 async function trouverToutesAgences() {
   return prisma.agence.findMany({
     orderBy: { nom: 'asc' },
@@ -32,10 +32,13 @@ async function trouverAgenceParId(id) {
   });
 }
 
-// méthode pour récupérer une agence par son code
-async function trouverAgenceParCode(code) {
-  return prisma.agence.findUnique({ 
-    where: { code } 
+// méthode pour récupérer une agence par son code et sa sous-agence
+async function trouverAgenceParCodeEtSousAgence(code, sousAgence = null) {
+  return prisma.agence.findFirst({
+    where: {
+      code,
+      sousAgence: sousAgence === null ? null : sousAgence
+    }
   });
 }
 
@@ -67,12 +70,11 @@ async function compterClientsEtBiens(id) {
   return { clients, biens };
 }
 
-
 module.exports = {
   ...agenceBase,
   trouverToutesAgences,
   trouverAgenceParId,
-  trouverAgenceParCode,
+  trouverAgenceParCodeEtSousAgence,
   agenceADesRelations,
   compterClientsEtBiens
 };
