@@ -3,11 +3,7 @@
   "info": {
     "title": "TECH 221 - API Gestion Immobilière",
     "version": "1.0.0",
-    "description": "API REST pour la gestion des agences, clients, biens et visites immobilières",
-    "contact": {
-      "name": "TECH 221",
-      "email": "contact@tech221.com"
-    }
+    "description": "API REST pour la gestion des agences, clients, biens et visites immobilières"
   },
   "servers": [
     {
