@@ -1,5 +1,5 @@
 
-const agenceRepo = require('../repositories/agence.repo');
+const agenceRepo = require('../repositories/agence.repo'); 
 const { HttpError } = require('../utils/httpError');
 
 async function trouverToutesAgences() {

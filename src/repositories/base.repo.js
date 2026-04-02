@@ -1,4 +1,4 @@
-// repositories/base.repo.js
+
 const prisma = require('../config/db');
 const { convertirId, traiterIdsWhere } = require('../utils/id.utils');
 

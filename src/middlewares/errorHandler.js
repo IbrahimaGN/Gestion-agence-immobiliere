@@ -4,6 +4,7 @@ const { HttpError } = require('../utils/httpError');
 // Middleware de gestion des erreurs
 const errorHandler = (err, req, res, next) => {
   console.error(`[ERREUR] ${err.name}: ${err.message}`);
+  console.error(err.stack);
 
   // Erreur Prisma - violation de contrainte unique
   // .meta? permet d'accéder à des informations supplémentaires sur l'erreur, comme les champs concernés

@@ -14,6 +14,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const notFound = require('./middlewares/notFound');
 
 // Routes
+const authRoutes = require('./routes/auth.routes');
 const agenceRoutes = require('./routes/agence.routes');
 const clientRoutes = require('./routes/client.routes');
 const bienRoutes = require('./routes/bien.routes');
@@ -45,6 +46,7 @@ app.get('/health', (req, res) => {
 });
 
 // Routes de l'API
+app.use('/auth', authRoutes);
 app.use('/api/agences', agenceRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/biens',   bienRoutes);

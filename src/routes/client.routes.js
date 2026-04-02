@@ -1,16 +1,20 @@
-
 const express = require('express');
-const clientController = require('../controllers/client.controller');
-const valider = require('../middlewares/validate');
-const { schemaCreerClient, schemaMettreAJourClient } = require('../validation/client.schema');
-const {uploadImage} = require('../middlewares/upload.middleware');
-
 const router = express.Router();
+const clientController = require('../controllers/client.controller');
+const { authenticate, authorize } = require('../middlewares/auth');
+const multer = require('multer');
 
+const upload = multer({ storage: multer.memoryStorage() });
+// Toutes les routes nécessitent une authentification
+router.use(authenticate);
+
+// Routes pour les administrateurs uniquement
+router.post('/', authorize('ADMIN'), upload.single('imageUrl'), clientController.createClient);
+router.put('/:id', authorize('ADMIN'), upload.single('imageUrl'), clientController.updateClient);
+router.delete('/:id', authorize('ADMIN'), clientController.deleteClient);
+
+// Routes accessibles à tous les utilisateurs authentifiés
 router.get('/', clientController.getClients);
 router.get('/:id', clientController.getClientById);
-router.post('/', uploadImage, valider(schemaCreerClient), clientController.createClient);
-router.put('/:id', uploadImage, valider(schemaMettreAJourClient), clientController.updateClient);
-router.delete('/:id', clientController.deleteClient);
 
 module.exports = router;

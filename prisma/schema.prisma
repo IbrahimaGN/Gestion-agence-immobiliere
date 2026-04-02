@@ -32,6 +32,21 @@ enum StatutVisite {
   EFFECTUEE
 }
 
+model Utilisateur {
+  id        Int      @id @default(autoincrement())
+  prenom    String
+  nom       String
+  email     String   @unique
+  password  String
+  telephone String?
+  image     String?
+  role      String   @default("CLIENT")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("utilisateurs")
+}
+
 model Agence {
   id        Int      @id @default(autoincrement())
   code      String   @unique

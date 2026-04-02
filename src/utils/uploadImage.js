@@ -2,7 +2,8 @@ const cloudinary = require('../config/cloudinary');
 const { HttpError } = require('./httpError');
 
 // méthode pour uploader une image sur Cloudinary
-const uploadImage = async (buffer, fichier, dossier = 'tech221-immo/biens') => {
+// Un Buffer est une zone mémoire temporaire qui stocke des données binaires brutes, c'est-à-dire des octets (bytes)
+const uploadImage = async (buffer, fichier, dossier = 'tech221-immo/client') => {
   if (!fichier) {
     throw new HttpError(400, 'Aucun fichier fourni');
   }
@@ -35,28 +36,29 @@ const supprimerImage = async (publicId) => {
   }
 };
 
-// Fonction pour extraire le publicId d'une URL Cloudinary
 const extrairePublicId = (imageUrl) => {
   if (!imageUrl) return null;
-  
+
   try {
-    // Exemple d'URL Cloudinary: 
-    // https://res.cloudinary.com/cloud_name/image/upload/v1234567890/tech221-immo/clients/image_name.jpg
     const urlParts = imageUrl.split('/');
     const uploadIndex = urlParts.indexOf('upload');
-    
+
     if (uploadIndex === -1) return null;
+
+    const partsApresUpload = urlParts.slice(uploadIndex + 1);
+
     
-    // Prendre la partie après 'upload' (inclut le dossier et le nom du fichier)
-    const publicIdWithVersion = urlParts.slice(uploadIndex + 1).join('/');
-    
-    // Supprimer le préfixe de version (v1234567890/) si présent
-    const publicId = publicIdWithVersion.replace(/^v\d+\//, '');
-    
-    // Supprimer l'extension du fichier (.jpg, .png, etc.)
-    return publicId.replace(/\.[^/.]+$/, '');
+    const premierSegment = partsApresUpload[0];
+    if (/^v\d+$/.test(premierSegment)) {
+      partsApresUpload.shift();
+    }
+
+    const publicIdAvecExtension = partsApresUpload.join('/');
+
+    return publicIdAvecExtension.replace(/\.[^/.]+$/, '');
+
   } catch (error) {
-    console.error('Erreur lors de l\'extraction du publicId:', error);
+    console.error("Erreur lors de l'extraction du publicId:", error);
     return null;
   }
 };

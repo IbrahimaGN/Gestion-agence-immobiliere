@@ -1,5 +1,5 @@
-const baseRepo = require('./base.repo');
 const prisma = require('../config/db');
+const baseRepo = require('./base.repo');
 const { convertirId } = require('../utils/id.utils');
 
 // Créer le repository de base pour 'agence'
